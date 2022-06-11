@@ -10,7 +10,7 @@ namespace APIRest.DAL.Contracts
     /// </summary>
     /// <typeparam name="T">Clase del objeto contenedor</typeparam>
     /// <typeparam name="U">Clase de los objetos hijos</typeparam>
-    interface IGenericRelationship<T, U>
+    public interface IGenericRelationship<T, U>
     {
         /// <summary>
         /// Agrego una relación de tipo 1 a *, T elemento origen, U es el destino
@@ -37,6 +37,6 @@ namespace APIRest.DAL.Contracts
         /// </summary>
         /// <param name="parent">Este objeto contiene una coleccion de objetos hijos</param>
         /// <returns>Devuelve la lista de objetos hijos</returns>
-        List<U> Obtener(T parent);
+        List<U> GetChildren(T parent);
     }
 }

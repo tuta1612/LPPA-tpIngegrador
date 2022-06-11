@@ -72,7 +72,7 @@ namespace APIRest.DAL
                 }
                 return allPermissions;
             } catch (Exception ex) {
-                throw new Exception("Hubo un problema al listar los usuarios");
+                throw new Exception("Hubo un problema al listar los permisos");
             }
         }
     }

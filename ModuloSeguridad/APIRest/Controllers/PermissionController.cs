@@ -45,10 +45,10 @@ namespace APIRest.Controllers
         }
 
         [HttpPut]
-        public bool Put(Permission newPermission)
+        public bool Put(Permission onePermission)
         {
             try {
-                DALFactory.GetPermissionsRepository(this._configuration).Update(newPermission);
+                DALFactory.GetPermissionsRepository(this._configuration).Update(onePermission);
                 return true;
             } catch (Exception) {
                 return false;
@@ -56,10 +56,10 @@ namespace APIRest.Controllers
         }
 
         [HttpDelete]
-        public bool Delete(Permission newPermission)
+        public bool Delete(Permission onePermission)
         {
             try {
-                DALFactory.GetPermissionsRepository(this._configuration).Delete(newPermission);
+                DALFactory.GetPermissionsRepository(this._configuration).Delete(onePermission);
                 return true;
             } catch (Exception) {
                 return false;

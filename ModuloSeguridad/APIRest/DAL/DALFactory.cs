@@ -16,6 +16,11 @@ namespace APIRest.DAL
         {
             return new DALPrivilege(configuration.GetConnectionString("DefaultConnection"));
         }
+
+        public static IGenericRepository<UserDAO> GetUsersRepository(IConfiguration configuration)
+        {
+            return new DALUser(configuration.GetConnectionString("DefaultConnection"));
+        }
     }
 }
 
