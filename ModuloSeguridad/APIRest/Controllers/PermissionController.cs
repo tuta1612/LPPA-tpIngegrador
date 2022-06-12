@@ -1,4 +1,5 @@
-﻿using APIRest.DAL;
+﻿using APIRest.Controllers.Helpers;
+using APIRest.DAL;
 using APIRest.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -28,41 +29,45 @@ namespace APIRest.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Permission> Get()
+        public GenericResponse<IEnumerable<Permission>> Get()
         {
-            return DALFactory.GetPermissionsRepository(this._configuration).FindAll();
+            try {
+                return new GenericResponse<IEnumerable<Permission>>(DALFactory.GetPermissionsRepository(this._configuration).FindAll(), "Success");
+            } catch (Exception ex){
+                return new GenericResponse<IEnumerable<Permission>>(new List<Permission>(), ex.Message);
+            }
         }
 
         [HttpPost]
-        public bool Post(Permission newPermission)
+        public GenericResponse<bool> Post(Permission newPermission)
         {
             try {
                 DALFactory.GetPermissionsRepository(this._configuration).Insert(newPermission);
-                return true;
-            } catch (Exception) {
-                return false;
+                return new GenericResponse<bool>(true, "Success");
+            } catch (Exception ex) {
+                return new GenericResponse<bool>(false, ex.Message);
             }
         }
 
         [HttpPut]
-        public bool Put(Permission onePermission)
+        public GenericResponse<bool> Put(Permission onePermission)
         {
             try {
                 DALFactory.GetPermissionsRepository(this._configuration).Update(onePermission);
-                return true;
-            } catch (Exception) {
-                return false;
+                return new GenericResponse<bool>(true, "Success");
+            } catch (Exception ex) {
+                return new GenericResponse<bool>(false, ex.Message);
             }
         }
 
         [HttpDelete]
-        public bool Delete(Permission onePermission)
+        public GenericResponse<bool> Delete(Permission onePermission)
         {
             try {
                 DALFactory.GetPermissionsRepository(this._configuration).Delete(onePermission);
-                return true;
-            } catch (Exception) {
-                return false;
+                return new GenericResponse<bool>(true, "Success");
+            } catch (Exception ex) {
+                return new GenericResponse<bool>(false, ex.Message);
             }
         }
     }

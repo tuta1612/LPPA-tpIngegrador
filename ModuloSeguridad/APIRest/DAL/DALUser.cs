@@ -21,7 +21,7 @@ namespace APIRest.DAL
         public void Insert(UserDAO oneObject)
         {
             if (oneObject.Username == null || oneObject.Username.Trim().Length == 0 ||
-                oneObject.Salt== null || oneObject.PasswordHash.Trim().Length == 0 ||
+                oneObject.Salt== null || oneObject.Salt.Trim().Length == 0 ||
                 oneObject.PasswordHash == null || oneObject.PasswordHash.Trim().Length == 0 ||
                 oneObject.Email == null || oneObject.Email.Trim().Length == 0)
                 throw new Exception("Faltan completar datos");
@@ -58,7 +58,7 @@ namespace APIRest.DAL
         public void Update(UserDAO oneObject)
         {
             if (oneObject.Username == null || oneObject.Username.Trim().Length == 0 ||
-                oneObject.Salt == null || oneObject.PasswordHash.Trim().Length == 0 ||
+                oneObject.Salt == null || oneObject.Salt.Trim().Length == 0 ||
                 oneObject.PasswordHash == null || oneObject.PasswordHash.Trim().Length == 0 ||
                 oneObject.Email == null || oneObject.Email.Trim().Length == 0)
                 throw new Exception("Faltan completar datos");
