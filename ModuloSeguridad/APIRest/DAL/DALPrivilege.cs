@@ -26,7 +26,7 @@ namespace APIRest.DAL
                 SqlHelper sqlHelper = new SqlHelper(connectionString);
                 sqlHelper.ExecuteNonQuery("Privileges_Insert", System.Data.CommandType.StoredProcedure, new SqlParameter[] {
                        new SqlParameter("@Description", oneObject.Name)});
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al agregar un nuevo permiso");
             }
         }
@@ -37,7 +37,7 @@ namespace APIRest.DAL
                 SqlHelper sqlHelper = new SqlHelper(connectionString);
                 sqlHelper.ExecuteNonQuery("Privileges_Deleted", System.Data.CommandType.StoredProcedure, new SqlParameter[] {
                        new SqlParameter("@Id", oneObject.Id)});
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al borrar este permiso");
             }
         }
@@ -51,7 +51,7 @@ namespace APIRest.DAL
                 sqlHelper.ExecuteNonQuery("Privileges_Mod", System.Data.CommandType.StoredProcedure, new SqlParameter[] {
                            new SqlParameter("@Id", oneObject.Id),
                            new SqlParameter("@Description", oneObject.Name)});
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al modificar este permiso");
             }
         }
@@ -71,7 +71,7 @@ namespace APIRest.DAL
                     }
                 }
                 return allPermissions;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al listar los permisos");
             }
         }

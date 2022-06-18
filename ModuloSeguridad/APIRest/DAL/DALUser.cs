@@ -37,7 +37,7 @@ namespace APIRest.DAL
                 oneObject.Permissions.ForEach(child =>
                     new DALRelationshipUserPermission(connectionString).Join(oneObject, child)
                 );
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al agregar un nuevo usuario");
             }
         }
@@ -50,7 +50,7 @@ namespace APIRest.DAL
                 SqlHelper sqlHelper = new SqlHelper(connectionString);
                 sqlHelper.ExecuteNonQuery("User_Deleted", System.Data.CommandType.StoredProcedure, new SqlParameter[] {
                        new SqlParameter("@id", oneObject.Id)});
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al borrar este usuario");
             }
         }
@@ -76,7 +76,7 @@ namespace APIRest.DAL
                     new DALRelationshipUserPermission(connectionString).Join(oneObject, child)
                 );
             }
-            catch (Exception ex) {
+            catch (Exception) {
                 throw new Exception("Hubo un problema al modificar este usuario");
             }
         }
@@ -99,7 +99,7 @@ namespace APIRest.DAL
                     }
                 }
                 return allUsers;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al listar los usuarios");
             }
         }
