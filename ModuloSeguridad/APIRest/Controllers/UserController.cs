@@ -7,12 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
-using System.Threading.Tasks;
-
-
-
 
 
 namespace APIRest.Controllers
@@ -50,7 +45,7 @@ namespace APIRest.Controllers
                 if (!verifyEmailFormat(newUser.Email))
                     throw new Exception("El mail no tiene un formato valido");
 
-                string oneSalt = SecurityHelper.CreateSalt(50);
+                string oneSalt = SecurityHelper.CreateSalt(35);
                 UserDAO userDao = new UserDAO();
                 userDao.Id = 0;
                 userDao.Username = newUser.Username;

@@ -1,16 +1,11 @@
 ﻿using APIRest.Controllers.Helpers;
 using APIRest.DAL;
 using APIRest.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-
-
 
 
 namespace APIRest.Controllers
@@ -29,45 +24,58 @@ namespace APIRest.Controllers
         }
 
         [HttpGet]
-        public GenericResponse<IEnumerable<Permission>> Get()
+        [Authorize]
+        public IActionResult Get()
         {
             try {
-                return new GenericResponse<IEnumerable<Permission>>(DALFactory.GetPermissionsRepository(this._configuration).FindAll(), "Success");
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
+                var permissions = DALFactory.GetPermissionsRepository(this._configuration).FindAll();
+                return Ok(permissions);
             } catch (Exception ex){
-                return new GenericResponse<IEnumerable<Permission>>(new List<Permission>(), ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
-        public GenericResponse<bool> Post(Permission newPermission)
+        [Authorize]
+        public IActionResult Post(Permission newPermission)
         {
             try {
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
                 DALFactory.GetPermissionsRepository(this._configuration).Insert(newPermission);
-                return new GenericResponse<bool>(true, "Success");
+                return Ok();
             } catch (Exception ex) {
-                return new GenericResponse<bool>(false, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
-        public GenericResponse<bool> Put(Permission onePermission)
+        [Authorize]
+        public IActionResult Put(Permission onePermission)
         {
             try {
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
                 DALFactory.GetPermissionsRepository(this._configuration).Update(onePermission);
-                return new GenericResponse<bool>(true, "Success");
+                return Ok();
             } catch (Exception ex) {
-                return new GenericResponse<bool>(false, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpDelete]
-        public GenericResponse<bool> Delete(Permission onePermission)
+        [Authorize]
+        public IActionResult Delete(Permission onePermission)
         {
             try {
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
                 DALFactory.GetPermissionsRepository(this._configuration).Delete(onePermission);
-                return new GenericResponse<bool>(true, "Success");
+                return Ok();
             } catch (Exception ex) {
-                return new GenericResponse<bool>(false, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

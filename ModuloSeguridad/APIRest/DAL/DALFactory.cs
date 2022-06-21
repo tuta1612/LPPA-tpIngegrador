@@ -21,6 +21,11 @@ namespace APIRest.DAL
         {
             return new DALUser(configuration.GetConnectionString("DefaultConnection"));
         }
+
+        public static IGenericRepository<TokenDAO> GetRefreshTokenRepository(IConfiguration configuration)
+        {
+            return new DALRefreshTokens(configuration.GetConnectionString("DefaultConnection"));
+        }
     }
 }
 
