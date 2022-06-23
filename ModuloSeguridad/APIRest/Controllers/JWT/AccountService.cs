@@ -26,10 +26,10 @@ namespace APIRest.Controllers.JWT
             _configuration.Bind(nameof(JwtSettings), _jwtSettings);
         }
 
-        public AuthenticationResponse? AuthenticateSync(LoginRequest request)
+        public AuthenticationResponse AuthenticateSync(LoginRequest request)
         {
             var users = DALFactory.GetUsersRepository(this._configuration).FindAll();
-            var currentUser = users.FirstOrDefault(item=> SecurityHelper.AreEqual(request.Password, item.PasswordHash, item.Salt));
+            var currentUser = users.FirstOrDefault(item=> item.Username==request.UserName && SecurityHelper.AreEqual(request.Password, item.PasswordHash, item.Salt));
             if (currentUser == null)
                 return null;
             
@@ -50,7 +50,7 @@ namespace APIRest.Controllers.JWT
             };
         }
         
-        public AuthenticationResponse? RefreshTokenSync(String refreshToken) {
+        public AuthenticationResponse RefreshTokenSync(String refreshToken) {
             var tokens = DALFactory.GetRefreshTokenRepository(this._configuration).FindAll();
             var currentToken = tokens.FirstOrDefault(item => item.Token == refreshToken && item.Expires > DateTime.Now);
             if (currentToken == null)
@@ -72,37 +72,27 @@ namespace APIRest.Controllers.JWT
 
         public bool RegisterSync(RegisterRequest request)
         {
-            try {
-                if (request.Password.Length < 5)
-                    throw new Exception("La contraseña es muy corta");
+            if (request.Password != request.ConfirmPassword)
+                throw new Exception("Ambas contraseñas deben ser iguales");
+            if (request.Password.Length < 5)
+                throw new Exception("La contraseña es muy corta");
 
-                if (!verifyEmailFormat(request.Email))
-                    throw new Exception("El mail no tiene un formato valido");
+            if (!SecurityHelper.verifyEmailFormat(request.Email))
+                throw new Exception("El mail no tiene un formato valido");
 
-                string oneSalt = SecurityHelper.CreateSalt(35);
-                UserDAO userDao = new UserDAO();
-                userDao.Id = 0;
-                userDao.Username = request.UserName;
-                userDao.Salt = oneSalt;
-                userDao.PasswordHash = SecurityHelper.GenerateHash(request.Password, oneSalt);
-                userDao.Email = request.Email;
-                userDao.Permissions = new List<Permission>();
-                DALFactory.GetUsersRepository(this._configuration).Insert(userDao);
-                return true;
-            } catch (Exception ex) {
-                return false;
-            }
+            string oneSalt = SecurityHelper.CreateSalt(35);
+            UserDAO userDao = new UserDAO();
+            userDao.Id = 0;
+            userDao.Username = request.UserName;
+            userDao.Salt = oneSalt;
+            userDao.PasswordHash = SecurityHelper.GenerateHash(request.Password, oneSalt);
+            userDao.Email = request.Email;
+            userDao.Permissions = new List<Permission>();
+            DALFactory.GetUsersRepository(this._configuration).Insert(userDao);
+            return true;
         }
 
-        private bool verifyEmailFormat(string oneEmail)
-        {
-            try {
-                MailAddress mailAddress = new MailAddress(oneEmail);
-                return true;
-            } catch (FormatException) {
-                return false;
-            }
-        }
+        
 
         private JwtSecurityToken GenerateJWTToken(UserDAO user) {
             var roles = String.Join(", ", user.Permissions.Select(o=>o.Name));

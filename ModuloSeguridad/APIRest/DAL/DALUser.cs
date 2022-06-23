@@ -57,19 +57,25 @@ namespace APIRest.DAL
 
         public void Update(UserDAO oneObject)
         {
-            if (oneObject.Username == null || oneObject.Username.Trim().Length == 0 ||
-                oneObject.Salt == null || oneObject.Salt.Trim().Length == 0 ||
-                oneObject.PasswordHash == null || oneObject.PasswordHash.Trim().Length == 0 ||
-                oneObject.Email == null || oneObject.Email.Trim().Length == 0)
+            if (oneObject.Email == null || oneObject.Email.Trim().Length == 0)
                 throw new Exception("Faltan completar datos");
             try {
                 SqlHelper sqlHelper = new SqlHelper(connectionString);
-                sqlHelper.ExecuteNonQuery("User_Mod", System.Data.CommandType.StoredProcedure, new SqlParameter[] {
+                SqlParameter[] sqlParameters = new SqlParameter[] {
                         new SqlParameter("@id", oneObject.Id),
-                        new SqlParameter("@UserName", oneObject.Username),
-                        new SqlParameter("@Salt", oneObject.Salt),
-                        new SqlParameter("@PasswordHash", oneObject.PasswordHash),
-                        new SqlParameter("@Email", oneObject.Email),});
+                        new SqlParameter("@Email", oneObject.Email),
+                        new SqlParameter("@UserName", DBNull.Value),
+                        new SqlParameter("@Salt", DBNull.Value),
+                        new SqlParameter("@PasswordHash", DBNull.Value)
+                };
+                if (oneObject.Username != null)
+                    sqlParameters[3] = new SqlParameter("@UserName", oneObject.Username);
+                if (oneObject.Salt != null)
+                    sqlParameters[4] = new SqlParameter("@Salt", oneObject.Salt);
+                if (oneObject.PasswordHash != null)
+                    sqlParameters[5] = new SqlParameter("@PasswordHash", oneObject.PasswordHash);
+
+                sqlHelper.ExecuteNonQuery("User_Mod", System.Data.CommandType.StoredProcedure, sqlParameters);
 
                 new DALRelationshipUserPermission(connectionString).UnlinkAll(oneObject);
                 oneObject.Permissions.ForEach(child =>

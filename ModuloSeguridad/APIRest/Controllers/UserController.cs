@@ -2,6 +2,7 @@
 using APIRest.DAL;
 using APIRest.DAL.Contracts;
 using APIRest.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -26,23 +27,30 @@ namespace APIRest.Controllers
         }
 
         [HttpGet]
-        public GenericResponse<IEnumerable<UserDAO>> Get()
+        [Authorize]
+        public IActionResult Get()
         {
             try {
-                return new GenericResponse<IEnumerable<UserDAO>>(DALFactory.GetUsersRepository(this._configuration).FindAll(), "Success");
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
+                var permissions = DALFactory.GetUsersRepository(this._configuration).FindAll();
+                return Ok(permissions);
             } catch (Exception ex) {
-                return new GenericResponse<IEnumerable<UserDAO>>(new List<UserDAO>(), ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
-        public GenericResponse<bool> Post(User newUser)
+        [Authorize]
+        public IActionResult Post(User newUser)
         {
             try {
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
+
                 if (newUser.Password.Length < 5)
                     throw new Exception("La contraseña es muy corta");
-
-                if (!verifyEmailFormat(newUser.Email))
+                if (!SecurityHelper.verifyEmailFormat(newUser.Email))
                     throw new Exception("El mail no tiene un formato valido");
 
                 string oneSalt = SecurityHelper.CreateSalt(35);
@@ -54,40 +62,47 @@ namespace APIRest.Controllers
                 userDao.Email = newUser.Email;
                 userDao.Permissions = newUser.Permissions;
                 DALFactory.GetUsersRepository(this._configuration).Insert(userDao);
-                return new GenericResponse<bool>(true, "Success");
+                return Ok();
             } catch (Exception ex) {
-                return new GenericResponse<bool>(false, ex.Message);
-            }
-        }
-
-        private bool verifyEmailFormat(string oneEmail) {
-            try {
-                MailAddress mailAddress = new MailAddress(oneEmail);
-                return true;
-            } catch (FormatException) {
-                return false;
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
-        public GenericResponse<bool> Put(UserDAO oneUser)
+        [Authorize]
+        public IActionResult Put(User oneUser)
         {
             try {
-                DALFactory.GetUsersRepository(this._configuration).Update(oneUser);
-                return new GenericResponse<bool>(true, "Success");
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
+                
+                UserDAO userDao = new UserDAO();
+                userDao.Id = oneUser.Id;
+                userDao.Username = null;
+                userDao.Salt = null;
+                userDao.PasswordHash = null;
+                userDao.Email = oneUser.Email;
+                userDao.Permissions = oneUser.Permissions;
+                DALFactory.GetUsersRepository(this._configuration).Update(userDao);
+                return Ok();
             } catch (Exception ex) {
-                return new GenericResponse<bool>(false, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpDelete]
-        public GenericResponse<bool> Delete(UserDAO oneUser)
+        [Authorize]
+        public IActionResult Delete(UserDAO oneUser)
         {
             try {
+                if (!SecurityHelper.HasAdminRole(Request))
+                    return BadRequest("Debe tener permiso de Admin para realizar esta operación");
+                if(SecurityHelper.GetUserIdFromHeaders(Request) == oneUser.Id)
+                    return BadRequest("No puedes eliminarte a ti mismo");
                 DALFactory.GetUsersRepository(this._configuration).Delete(oneUser);
-                return new GenericResponse<bool>(true, "Success");
+                return Ok();
             } catch (Exception ex) {
-                return new GenericResponse<bool>(false, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

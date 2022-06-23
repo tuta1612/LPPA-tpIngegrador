@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
+using System.Net.Mail;
 
 namespace APIRest.Controllers.Helpers
 {
@@ -39,12 +40,36 @@ namespace APIRest.Controllers.Helpers
             var roles = fullToken.Claims.FirstOrDefault(item => item.Type == "Roles");
             return roles.Value.Split(",");
         }
-
+        
         internal static bool HasAdminRole(HttpRequest request) {
             var jwtToken = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var roles = SecurityHelper.GetRolesFromToken(jwtToken);
             return roles.Contains("Admin");
         }
 
+        internal static int GetUserIdFromToken(string jwtToken)
+        {
+            var fullToken = new JwtSecurityTokenHandler().ReadJwtToken(jwtToken);
+            var userId = fullToken.Claims.FirstOrDefault(item => item.Type == "uid");
+            return int.Parse(userId.Value);
+        }
+        internal static int GetUserIdFromHeaders(HttpRequest request)
+        {
+            var jwtToken = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            return GetUserIdFromToken(jwtToken);
+        }
+
+        internal static bool verifyEmailFormat(string oneEmail)
+        {
+            try
+            {
+                MailAddress mailAddress = new MailAddress(oneEmail);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
     }
 }

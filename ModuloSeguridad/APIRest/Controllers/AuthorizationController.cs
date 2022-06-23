@@ -27,18 +27,49 @@ namespace APIRest.Controllers
         }
 
 
-        [HttpPost("authenticate")]
-        public GenericResponse<AuthenticationResponse> LogIn(LoginRequest request)
+        [HttpPost("LogIn")]
+        public IActionResult LogIn(LoginRequest request)
         {
-            AccountService accountService = new AccountService(_configuration);
-            return new GenericResponse<AuthenticationResponse>(accountService.AuthenticateSync(request), "Ok");
+            try {
+                AccountService accountService = new AccountService(_configuration);
+                var result = accountService.AuthenticateSync(request);
+                if (result != null)
+                    return Ok(result);
+                else
+                    return BadRequest("Usuario y/o clave incorrectos");
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPost("refreshtoken")]
-        public GenericResponse<AuthenticationResponse> RefreshToken(String refreshToken)
+        [HttpPost("RefreshToken")]
+        public IActionResult RefreshToken(String refreshToken)
         {
-            AccountService accountService = new AccountService(_configuration);
-            return new GenericResponse<AuthenticationResponse>(accountService.RefreshTokenSync(refreshToken), "Ok");
+            try {
+                AccountService accountService = new AccountService(_configuration);
+                var result = accountService.RefreshTokenSync(refreshToken);
+                if (result != null)
+                    return Ok(result);
+                else
+                    return BadRequest("Este token no es válido o ha expirado");
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SignUp")]
+        public IActionResult SignUp(RegisterRequest request)
+        {
+            try {
+                AccountService accountService = new AccountService(_configuration);
+                var result = accountService.RegisterSync(request);
+                if (result)
+                    return Ok();
+                else
+                    return BadRequest("Hubo un problema al registrar el usuario");
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
