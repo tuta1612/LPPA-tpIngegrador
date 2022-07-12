@@ -15,7 +15,7 @@ using System.Text;
 
 namespace APIRest.Controllers.JWT
 {
-    public class AccountService : IAccountService
+    public class AccountService
     {
         private readonly IConfiguration _configuration;
         private readonly JwtSettings _jwtSettings;

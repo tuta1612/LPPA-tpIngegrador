@@ -31,6 +31,7 @@ namespace APIRest
             Configuration.Bind(nameof(JwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
 
+
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,6 +70,12 @@ namespace APIRest
                     }
                 };
 
+                services.AddCors( options => {
+                    options.AddPolicy(name: "miAppCors", policy => { 
+                        policy.WithOrigins("htpp://localhost:3000"); 
+                    });
+                });
+
                 c.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement() {
                     { jwtSecurityScheme, Array.Empty<String>() }
@@ -90,6 +97,8 @@ namespace APIRest
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("miAppCors");
 
             app.UseAuthentication();
 
