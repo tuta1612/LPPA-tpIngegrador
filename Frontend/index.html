@@ -1,102 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-   <head>
-      <meta charset="utf-8">
-      <title>Maquetado de login con HTML + CSS + JAVA + API-REST</title>
-      <link rel="stylesheet" href="styles.css">
-      <script src="index.js"></script>
-
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   </head>
-   <body>
-      <div class="wrapper">
-         <div class="title-text">
-            <div class="title login">
-               Ingrese
-            </div>
-            <div class="title signup">
-               Resgístrese
-            </div>
-         </div>
-         <div class="form-container">
-            <div class="slide-controls">
-               <input type="radio" name="slide" id="login" checked>
-               <input type="radio" name="slide" id="signup">
-               <label for="login" class="slide login">Ingreso</label>
-               <label for="signup" class="slide signup">Registro</label>
-               <div class="slider-tab"></div>
-            </div>
-            <div class="form-inner">
-               <form action="#" class="login">
-                  <div class="field">
-                     <input type="text" id="inputusuario" placeholder="Usuario" required>
-                  </div>
-                  <div class="field">
-                     <input type="password" id="inputpassword" placeholder="Contraseña" required>
-                  </div>
-                  <div class="pass-link">
-                     <a href="#">Olvidó su contraseña?</a>
-                  </div>
-                  <div class="field btn">
-                     <div class="btn-layer"></div>
-                     <input type="submit" value="Login" id="btnlogin">
-                  </div>
-                  <div class="signup-link">
-                     ¿No es miembro? <a href="">Inscríbase</a>
-                  </div>
-               </form>
-               <form action="#" class="signup">
-                  <div class="field">
-                     <input type="text" placeholder="Usuario" required>
-                  </div>
-                  <div class="field">
-                     <input type="password" placeholder="Contraseña" required>
-                  </div>
-                  <div class="field">
-                     <input type="password" placeholder="Confirme contraseña" required>
-                  </div>
-                
-                <div class="field">
-                   <input type="email" placeholder="Email" required>
-                </div>
-                  <div class="field btn">
-                     <div class="btn-layer"></div>
-                     <input type="submit" value="Signup">
-                  </div>
-                </div>
-               </form>
-            </div>
-         </div>
-      </div>
-
-
-
-
-      <script>
-        
-         const loginText = document.querySelector(".title-text .login");
-         const loginForm = document.querySelector("form.login");
-         const loginBtn = document.querySelector("label.login");
-         const signupBtn = document.querySelector("label.signup");
-         const signupLink = document.querySelector("form .signup-link a");
-         const btnlogin = document.getElementById("btnlogin");
-         signupBtn.onclick = (()=>{
-           loginForm.style.marginLeft = "-50%";
-           loginText.style.marginLeft = "-50%";
-         });
-         loginBtn.onclick = (()=>{
-           loginForm.style.marginLeft = "0%";
-           loginText.style.marginLeft = "0%";
-         });
-         signupLink.onclick = (()=>{
-           signupBtn.click();
-           return false;
-         });
-         btnlogin.onclick = (()=>{
-           iniciarlogin();
-         });
-
-
-      </script>
-   </body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

@@ -92,6 +92,10 @@ namespace APIRest
                 app.UseDeveloperExceptionPage();
                 
             }
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIRest v1"));
 
