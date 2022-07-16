@@ -80,7 +80,8 @@ namespace APIRest.DAL
                 }
                 return allTokens;
             } catch (Exception ex) {
-                throw new Exception("Hubo un problema al listar los tokens");
+                throw ex;
+                //throw new Exception("Hubo un problema al listar los tokens");
             }
         }
     }
