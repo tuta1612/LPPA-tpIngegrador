@@ -2,7 +2,6 @@
 using APIRest.DTOs;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +28,7 @@ namespace APIRest.DAL.Adapters
 
         public TokenDAO Adapt(object[] values)
         {
-            var fecha = DateTime.ParseExact(values[3].ToString(), "dd/MM/yyyy H:mm:ss", new CultureInfo("es-AR"));
+            var fecha = DateTime.ParseExact(values[3].ToString(), "MM/dd/yyyy H:mm:ss", null);
             return new TokenDAO()
             {
                 Id = int.Parse(values[0].ToString()),
