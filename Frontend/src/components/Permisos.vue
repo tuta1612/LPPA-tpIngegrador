@@ -36,19 +36,89 @@ import axios from 'axios'
           this.loading = false;
         } )
         .catch( error => alert(error) );
+      },
+      addPermission(){
+        let newName = prompt("Seleccione un nombre para este nuevo permiso");
+        if(newName!=null && newName.length>0){
+          this.loading = true;
+          axios.post("https://lppa-tpintegrador.herokuapp.com/Permission",{
+            id: 0,
+            name: newName
+          },{
+            headers: {
+              'Authorization': 'Bearer '+this.accesToken,
+              'Content-type':'application/json'
+            }
+          })
+          .then( response => {
+            this.getAllPermissions();
+          } )
+          .catch( error => {
+            this.loading = false;
+            alert(error)
+            });
+          }
+      },
+      editPermission(item){
+        let newName = prompt("Seleccione el nuevo nombre para este permiso", item.name);
+        if(newName!=null && newName.length>0){
+          this.loading = true;
+          axios.put("https://lppa-tpintegrador.herokuapp.com/Permission",{
+            id: item.id,
+            name: newName
+          },{
+            headers: {
+              'Authorization': 'Bearer '+this.accesToken,
+              'Content-type':'application/json'
+            }
+          })
+          .then( response => {
+            this.getAllPermissions();
+          } )
+          .catch( error => {
+            this.loading = false;
+            alert(error)
+            });
+          }
+      },
+      deletePermission(item){
+        if(confirm("¿Está seguro?")){
+          this.loading = true;
+          axios.delete("https://lppa-tpintegrador.herokuapp.com/Permission?permissionId="+item.id,{
+            headers: {
+              'Authorization': 'Bearer '+this.accesToken,
+              'Content-type':'application/json'
+            }
+          })
+          .then( response => {
+            this.getAllPermissions();
+          } )
+          .catch( error => {
+            this.loading = false;
+            alert(error)
+            });
+          }
       }
     }
   }
 </script>
 
 <template>
-  <h1>Permisos</h1>
-  <p v-if="loading">Cargando...</p>
-  <ul v-else>
-    <li v-for="item in permisos">
-      {{item.id}} {{item.name}}
-    </li>
-  </ul>
+  <div class="spinner-border text-dark" role="status" v-if="loading">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div v-else>
+    <ul  class="list-group">
+      <li v-for="item in permisos" class="list-group-item">
+        {{item.id}} {{item.name}}
+        <button type="button" class="btn btn-warning" @click="editPermission(item)">Modificar</button>
+        <button type="button" class="btn btn-danger" @click="deletePermission(item)">Borrar</button>
+      </li>
+    </ul>
+    <p>Para agregar un nuevo permiso toca 
+      <button type="button" class="btn btn-primary" @click="addPermission()">Aqui</button>
+    </p>
+  </div>
 </template>
 
 <style scoped>

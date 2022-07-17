@@ -6,6 +6,11 @@ import Usuarios from './Usuarios.vue';
         userId: String,
         refreshToken: String
     },
+    data(){
+      return {
+        currentSection:null
+      }
+    },
     methods:{
       LogOut(){
         this.$emit("logout");
@@ -16,13 +21,17 @@ import Usuarios from './Usuarios.vue';
 </script>
 
 <template>
-  <h1>HOME</h1>
-  <button @click="LogOut">Cerrar sesión</button>
-  <p>{{userId}}</p>
-  <p>{{refreshToken}}</p>
-
-  <Permisos refreshToken="0BF54F9517933D42477FD64DF38C792C2442677B5E3E0DE7FF"></Permisos>
-  <Usuarios refreshToken="0BF54F9517933D42477FD64DF38C792C2442677B5E3E0DE7FF"></Usuarios>
+  <nav class="navbar fixed-top bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" @click="currentSection=null">Inicio</a>
+      <a class="nav-link" href="#" @click="currentSection='usuarios'">Usuarios</a>
+      <a class="nav-link" href="#" @click="currentSection='permisos'">Permisos</a>
+      <a class="nav-link" href="#" @click="LogOut">Cerrar sesión</a>
+    </div>
+  </nav>
+  <p v-if="currentSection==null">HOME</p>
+  <Usuarios v-if="currentSection=='usuarios'" :refreshToken="this.refreshToken"></Usuarios>
+  <Permisos v-if="currentSection=='permisos'" :refreshToken="this.refreshToken"></Permisos>
 </template>
 
 <style scoped>

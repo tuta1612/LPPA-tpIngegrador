@@ -92,13 +92,16 @@ namespace APIRest.Controllers
 
         [HttpDelete]
         [Authorize]
-        public IActionResult Delete(UserDAO oneUser)
+        public IActionResult Delete(int userId)
         {
             try {
                 if (!SecurityHelper.HasAdminRole(Request))
                     return BadRequest("Debe tener permiso de Admin para realizar esta operación");
-                if(SecurityHelper.GetUserIdFromHeaders(Request) == oneUser.Id)
+                if(SecurityHelper.GetUserIdFromHeaders(Request) == userId)
                     return BadRequest("No puedes eliminarte a ti mismo");
+                UserDAO oneUser = new UserDAO() {
+                    Id = userId
+                };
                 DALFactory.GetUsersRepository(this._configuration).Delete(oneUser);
                 return Ok();
             } catch (Exception ex) {

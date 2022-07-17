@@ -8,7 +8,7 @@ import axios from 'axios'
     data(){
       return {
         accesToken: null,
-        permisos :[],
+        usuarios :[],
         loading: true
       }
     },
@@ -36,17 +36,23 @@ import axios from 'axios'
           this.loading = false;
         } )
         .catch( error => alert(error) );
+      },
+      test(){
+        alert("test");
       }
     }
   }
 </script>
 
 <template>
-  <h1>Usuarios</h1>
-  <p v-if="loading">Cargando...</p>
-  <ul v-else>
-    <li v-for="item in permisos">
-      {{item.id}} {{item.username}} {{item.email}}
+  <div class="spinner-border text-dark" role="status" v-if="loading">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <ul v-else class="list-group">
+    <li v-for="item in usuarios" class="list-group-item">
+      {{item.id}} {{item.username}} {{item.email}}       
+      <button type="button" class="btn btn-warning" @click="test">Borrar</button>
+      <button type="button" class="btn btn-danger" @click="test">Modificar</button>
     </li>
   </ul>
 </template>

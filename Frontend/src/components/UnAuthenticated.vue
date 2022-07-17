@@ -20,13 +20,11 @@
           "password": this.userPassword
         })
         .then( response => {
-          debugger
           let userResponse = response.data;
           this.loading = false;
-          this.$emit("login-succes", userResponse.jwToken, userResponse.refreshToken);
+          this.$emit("login-succes", userResponse.userId, userResponse.userName, userResponse.jwToken, userResponse.refreshToken);
         } )
         .catch( error => {
-          debugger
           alert(error)
         } );
       },

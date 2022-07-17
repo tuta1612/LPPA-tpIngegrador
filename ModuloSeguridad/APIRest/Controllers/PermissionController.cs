@@ -67,11 +67,14 @@ namespace APIRest.Controllers
 
         [HttpDelete]
         [Authorize]
-        public IActionResult Delete(Permission onePermission)
+        public IActionResult Delete(int permissionId)
         {
             try {
                 if (!SecurityHelper.HasAdminRole(Request))
                     return BadRequest("Debe tener permiso de Admin para realizar esta operación");
+                Permission onePermission = new Permission() { 
+                    Id = permissionId
+                };
                 DALFactory.GetPermissionsRepository(this._configuration).Delete(onePermission);
                 return Ok();
             } catch (Exception ex) {

@@ -1,15 +1,12 @@
 <script>
   import Home from "./components/Home.vue";
-import UnAuthenticated from "./components/UnAuthenticated.vue";
+  import UnAuthenticated from "./components/UnAuthenticated.vue";
   
   export default{
-    props: {
-        userId: String,
-        refreshToken: String
-    },
     data(){
       return{
         userId: 0,
+        userName: null,
         accesToken: null,
         refreshToken: null
       }
@@ -20,11 +17,15 @@ import UnAuthenticated from "./components/UnAuthenticated.vue";
       }
     },
     methods:{
-      SetUserTokens(acces, refresh){
+      SetUserTokens(id, name, acces, refresh){
+        this.userId = id;
+        this.userName = name;
         this.accesToken = acces;
         this.refreshToken = refresh;
       },
       LogOut(){
+        this.userId = 0;
+        this.userName = null;
         this.accesToken = null;
         this.refreshToken = null;
       }
@@ -35,7 +36,7 @@ import UnAuthenticated from "./components/UnAuthenticated.vue";
 
 <template>
   <UnAuthenticated v-if="!hasUser" @login-succes="SetUserTokens"></UnAuthenticated>
-  <Home v-if="hasUser" :refreshToken="this.refreshToken" @logout="LogOut"></Home>
+  <Home v-if="hasUser" :userId="this.userId" :refreshToken="this.refreshToken" @logout="LogOut"></Home>
 </template>
 
 <style>
