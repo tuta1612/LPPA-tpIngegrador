@@ -29,7 +29,7 @@ import axios from 'axios'
           this.accesToken = response.data.jwToken;
           this.getAllPermissions();
         } )
-        .catch( error => alert(error) );
+        .catch( error => alert(error.response.data) );
       },
       getAllPermissions(){
         axios.get("https://lppa-tpintegrador.herokuapp.com/Permission", {
@@ -41,7 +41,7 @@ import axios from 'axios'
           this.permisos = response.data;
           this.loading = false;
         } )
-        .catch( error => alert(error) );
+        .catch( error => alert(error.response.data) );
       },
       cancel(){
         this.$emit("goto-userlist");
@@ -61,7 +61,7 @@ import axios from 'axios'
           } )
           .catch( error => {
             this.loading = false;
-            alert(error)
+            alert(error.response.data)
             });
           }
       },

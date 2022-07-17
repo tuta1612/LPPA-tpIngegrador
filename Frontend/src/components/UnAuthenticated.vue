@@ -8,11 +8,13 @@
         userEmail: null,
         userPassword: null,
         confirmPassword: null,
+        errorMessage: null,
         loading: false
       }
     },
     methods:{
       LogIn(){
+        this.errorMessage = null;
         if(this.userName == null || this.userName.length==0 ||
         this.userPassword == null || this.userPassword.length==0 )
           return;
@@ -23,16 +25,18 @@
           "password": this.userPassword
         })
         .then( response => {
+          this.errorMessage = null;
           let userResponse = response.data;
           this.loading = false;
           this.$emit("login-succes", userResponse.userId, userResponse.userName, userResponse.jwToken, userResponse.refreshToken);
         } )
         .catch( error => {
-          alert(error)
+          this.errorMessage = error.response.data;
           this.loading = false;
           });
       },
       SignUp(){
+        this.errorMessage = null;
         if(this.userName == null || this.userName.length==0 ||
         this.userEmail == null || this.userEmail.length==0 ||
         this.userPassword == null || this.userPassword.length==0 ||
@@ -47,12 +51,13 @@
           confirmPassword: this.confirmPassword
         })
         .then( response => {
+          this.errorMessage = null;
           let userResponse = response.data;
           this.loading = false;
           this.login = true
         } )
         .catch( error => {
-          alert(error)
+          this.errorMessage = error.response.data;
           this.loading = false;
           });
       }
@@ -124,7 +129,7 @@
             </form>
           </div>
       </div>
-        
+      <p class="text-danger" v-if="errorMessage!=null">{{errorMessage}}</p>
    </div>
 </template>
 

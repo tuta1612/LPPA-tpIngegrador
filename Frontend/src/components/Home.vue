@@ -29,7 +29,7 @@ import Usuarios from './Usuarios.vue';
       <a class="nav-link" href="#" @click="LogOut">Cerrar sesión</a>
     </div>
   </nav>
-  <p v-if="currentSection==null">HOME</p>
+  <img v-if="currentSection==null" src="../assets/logo.png">
   <Usuarios v-if="currentSection=='usuarios'" :refreshToken="this.refreshToken"></Usuarios>
   <Permisos v-if="currentSection=='permisos'" :refreshToken="this.refreshToken"></Permisos>
 </template>

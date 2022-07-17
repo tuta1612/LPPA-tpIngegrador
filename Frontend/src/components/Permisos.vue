@@ -24,7 +24,7 @@ import axios from 'axios'
           this.accesToken = response.data.jwToken;
           this.getAllPermissions();
         } )
-        .catch( error => alert(error) );
+        .catch( error => alert(error.response.data) );
       },
       getAllPermissions(){
         this.descripcionError = null;
@@ -61,7 +61,7 @@ import axios from 'axios'
           } )
           .catch( error => {
             this.loading = false;
-            alert(error)
+            alert(error.response.data)
             });
           }
       },
@@ -84,7 +84,7 @@ import axios from 'axios'
           } )
           .catch( error => {
             this.loading = false;
-            alert(error)
+            alert(error.response.data)
             });
           }
       },

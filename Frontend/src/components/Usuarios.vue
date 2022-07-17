@@ -26,7 +26,7 @@ import Usuario from './Usuario.vue';
                 this.accesToken = response.data.jwToken;
                 this.getAllUsers();
             })
-                .catch(error => alert(error));
+                .catch(error => alert(error.response.data));
         },
         getAllUsers() {
             this.descripcionError = null;
@@ -63,7 +63,8 @@ import Usuario from './Usuario.vue';
                     this.getAllUsers();
                 }).catch(error => {
                     this.loading = false;
-                    alert(error);
+                    alert(error.response.data);
+                    
                 });
             }
         }
@@ -86,9 +87,16 @@ import Usuario from './Usuario.vue';
   <div v-else>
     <ul  class="list-group">
       <li v-for="item in usuarios" class="list-group-item">
-        {{item.username}} / {{item.email}}
-        <button type="button" class="btn btn-warning" @click="editUser(item)">Modificar</button>
-        <button type="button" class="btn btn-danger" @click="deleteUser(item)">Borrar</button>
+        <div class="row">
+          <div class="col">
+            <h5 class="mb-1">{{item.username}}</h5>
+            <small>{{item.email}}</small>
+          </div>
+          <div class="col" >
+            <button type="button" class="btn btn-warning" @click="editUser(item)">Modificar</button>
+            <button type="button" class="btn btn-danger" @click="deleteUser(item)">Borrar</button>
+          </div>
+        </div>
       </li>
     </ul>
     <!--<p>Para agregar un nuevo usuario toca 
