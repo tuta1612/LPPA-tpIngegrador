@@ -60,6 +60,7 @@ import axios from 'axios'
           }
       },
       editPermission(item){
+        if(item.id==1) return;
         let newName = prompt("Seleccione el nuevo nombre para este permiso", item.name);
         if(newName!=null && newName.length>0){
           this.loading = true;
@@ -82,6 +83,7 @@ import axios from 'axios'
           }
       },
       deletePermission(item){
+        if(item.id==1) return;
         if(confirm("¿Está seguro?")){
           this.loading = true;
           axios.delete("https://lppa-tpintegrador.herokuapp.com/Permission?permissionId="+item.id,{
@@ -95,7 +97,7 @@ import axios from 'axios'
           } )
           .catch( error => {
             this.loading = false;
-            alert(error)
+            alert('No se pudo eliminar el permiso '+item.name);
             });
           }
       }
