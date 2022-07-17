@@ -10,6 +10,7 @@ import Usuario from './Usuario.vue';
         return {
             accesToken: null,
             usuarios: [],
+            descripcionError: null,
             currentUser: null,
             loading: true
         };
@@ -28,16 +29,21 @@ import Usuario from './Usuario.vue';
                 .catch(error => alert(error));
         },
         getAllUsers() {
+            this.descripcionError = null;
             axios.get("https://lppa-tpintegrador.herokuapp.com/User", {
                 headers: {
                     "Authorization": "Bearer " + this.accesToken
                 }
             })
-                .then(response => {
+            .then(response => {
+                this.descripcionError = null;
                 this.usuarios = response.data;
                 this.loading = false;
             })
-                .catch(error => alert(error));
+            .catch(error => {
+                this.loading = false;
+                this.descripcionError = error.response.data;
+            });
         },
         addUser() {
             this.$emit("detail", { id: 0, username: "", email: "", permissions: [] });
@@ -70,6 +76,7 @@ import Usuario from './Usuario.vue';
   <div class="spinner-border text-dark" role="status" v-if="loading">
     <span class="visually-hidden">Loading...</span>
   </div>
+    <p v-else-if="descripcionError!=null">{{descripcionError}}</p>
   <Usuario 
     v-else-if="currentUser!=null"
     :refreshToken="this.refreshToken"

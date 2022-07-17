@@ -3,8 +3,11 @@
   export default{
     data() {
       return {
+        login: true,
         userName: null,
+        userEmail: null,
         userPassword: null,
+        confirmPassword: null,
         loading: false
       }
     },
@@ -26,9 +29,33 @@
         } )
         .catch( error => {
           alert(error)
-        } );
+          this.loading = false;
+          });
       },
-      SignUp(){}
+      SignUp(){
+        if(this.userName == null || this.userName.length==0 ||
+        this.userEmail == null || this.userEmail.length==0 ||
+        this.userPassword == null || this.userPassword.length==0 ||
+        this.confirmPassword == null || this.confirmPassword.length==0 )
+          return;
+
+        this.loading = true;
+        axios.post("https://lppa-tpintegrador.herokuapp.com/Authorization/SignUp",{
+          userName: this.userName,
+          email: this.userEmail,
+          password: this.userPassword,
+          confirmPassword: this.confirmPassword
+        })
+        .then( response => {
+          let userResponse = response.data;
+          this.loading = false;
+          this.login = true
+        } )
+        .catch( error => {
+          alert(error)
+          this.loading = false;
+          });
+      }
     }
   }
 </script>
@@ -36,12 +63,12 @@
 
 <template>
   <div class="wrapper">
-      <div class="title-text">
+      <div v-if="login" class="title-text">
          <div class="title login">
-            Ingrese
+            Ingresar
          </div>
       </div>
-      <div class="form-container">
+      <div v-if="login" class="form-container">
          <div class="form-inner">
             <form action="#" class="login">
                <div class="field">
@@ -52,14 +79,52 @@
                </div>
                <div class="field btn" v-if="!loading">
                   <div class="btn-layer"></div>
-                  <input type="submit" value="Login" id="btnlogin" @click="LogIn">
+                  <input type="submit" value="Iniciar sesión" id="btnlogin" @click="LogIn">
                </div>
                <div class="spinner-border text-dark" role="status" v-if="loading">
                 <span class="visually-hidden">Loading...</span>
                </div>
+               <p>¿No tenes cuenta?
+                <a href="#" @click="login=false">Registrate</a>
+               </p>
             </form>
-         </div>
+          </div>
       </div>
+
+      <div v-if="!login" class="title-text">
+        <div class="title signup">
+            Crear nueva cuenta
+        </div>
+      </div>
+      <div v-if="!login" class="form-container">
+         <div class="form-inner">
+            <form action="#" class="signup">
+               <div class="field">
+                  <input type="text" id="user" placeholder="Usuario" required v-model="userName">
+               </div>
+               <div class="field">
+                  <input type="email" id="email" placeholder="Email" required v-model="userEmail">
+               </div>
+               <div class="field">
+                  <input type="password" id="password" placeholder="Contraseña" required v-model="userPassword">
+               </div>
+               <div class="field">
+                  <input type="password" id="confirmpassword" placeholder="Repetir contraseña" required v-model="confirmPassword">
+               </div>
+               <div class="field btn" v-if="!loading">
+                  <div class="btn-layer"></div>
+                  <input type="submit" value="Registrarse" id="btnsignup" @click="SignUp">
+               </div>
+               <div class="spinner-border text-dark" role="status" v-if="loading">
+                <span class="visually-hidden">Loading...</span>
+               </div>
+               <p>¿Ya tenes una cuenta?
+                <a href="#" @click="login=true">Ingresa</a> 
+               </p>
+            </form>
+          </div>
+      </div>
+        
    </div>
 </template>
 

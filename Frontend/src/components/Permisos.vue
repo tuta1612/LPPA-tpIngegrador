@@ -9,6 +9,7 @@ import axios from 'axios'
       return {
         accesToken: null,
         permisos :[],
+        descripcionError: null,
         loading: true
       }
     },
@@ -26,16 +27,21 @@ import axios from 'axios'
         .catch( error => alert(error) );
       },
       getAllPermissions(){
+        this.descripcionError = null;
         axios.get("https://lppa-tpintegrador.herokuapp.com/Permission", {
           headers: {
             'Authorization':'Bearer '+this.accesToken
           }
         })
         .then( response => {
+          this.descripcionError = null;
           this.permisos = response.data;
           this.loading = false;
         } )
-        .catch( error => alert(error) );
+        .catch( error => {
+          this.loading = false;
+          this.descripcionError = error.response.data;
+        });
       },
       addPermission(){
         let newName = prompt("Seleccione un nombre para este nuevo permiso");
@@ -109,6 +115,7 @@ import axios from 'axios'
   <div class="spinner-border text-dark" role="status" v-if="loading">
     <span class="visually-hidden">Loading...</span>
   </div>
+  <p v-else-if="descripcionError!=null">{{descripcionError}}</p>
   <div v-else>
     <ul  class="list-group">
       <li v-for="item in permisos" class="list-group-item">
