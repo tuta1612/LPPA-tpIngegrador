@@ -47,6 +47,12 @@ namespace APIRest.DAL
             try {
                 new DALRelationshipUserPermission(connectionString).UnlinkAll(oneObject);
 
+                var dalTokens = new DALRefreshTokens(connectionString);
+                var allTokens = dalTokens.FindAll();
+                var userTokens = allTokens.Where(item => item.UserId == oneObject.Id);
+                foreach (var token in userTokens) { 
+                    dalTokens.Delete(token);
+                }
                 SqlHelper sqlHelper = new SqlHelper(connectionString);
                 sqlHelper.ExecuteNonQuery("User_Deleted", System.Data.CommandType.StoredProcedure, new SqlParameter[] {
                        new SqlParameter("@id", oneObject.Id)});

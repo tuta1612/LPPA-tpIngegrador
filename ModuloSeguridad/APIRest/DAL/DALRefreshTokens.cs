@@ -40,6 +40,18 @@ namespace APIRest.DAL
 
         public void Delete(TokenDAO oneObject)
         {
+            if (oneObject.Id == 0)
+                throw new Exception("Faltan completar datos");
+            try
+            {
+                SqlHelper sqlHelper = new SqlHelper(connectionString);
+                sqlHelper.ExecuteNonQuery("Token_Deleted", System.Data.CommandType.StoredProcedure, new SqlParameter[] {
+                        new SqlParameter("@Id", oneObject.Id)});
+            }
+            catch (Exception)
+            {
+                throw new Exception("Hubo un problema al modificar este refresh token");
+            }
         }
 
         public void Update(TokenDAO oneObject)
@@ -79,7 +91,7 @@ namespace APIRest.DAL
                     }
                 }
                 return allTokens;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("Hubo un problema al listar los tokens");
             }
         }
